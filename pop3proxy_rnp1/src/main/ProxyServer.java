@@ -10,7 +10,7 @@ import java.util.logging.*;
 
 public class ProxyServer {
 
-	public final static int PORT = 11003;
+	public final static int PORT = 11006;
 	public final static Logger infoLogger = Logger.getLogger("info");
 	public final static Logger errorLogger = Logger.getLogger("errors");
 
@@ -48,8 +48,11 @@ public class ProxyServer {
 	
 	private static void initialize()
 	{
-		Account.add("Manfred", "Wurst");
-		Account a = Account.getByCredentials("Manfred", "Wurst");
+		Account.add("manfred", "Wurst");
+		Account a = Account.getByCredentials("manfred", "Wurst");
 		Mailbox.add(a);
+		Mailbox mbox = Mailbox.get(a);
+		mbox.addMessage(
+				"Hallo Peter");
 	}
 }

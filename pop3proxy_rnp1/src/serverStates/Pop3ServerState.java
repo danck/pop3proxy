@@ -20,14 +20,14 @@ public abstract class Pop3ServerState
 	{
 		//ProxyServer.infoLogger.log(Level.INFO, "S: +OK " + message);
 		System.out.println("S: SENT +OK " + message);
-		return "+OK "+message+"\n";
+		return "+OK "+message+"\r\n";
 	}
 	
 	public String getErr(String message)
 	{
 		//ProxyServer.infoLogger.log(Level.INFO, "S: -ERR " + message);
-		System.out.println("S: SENT +Err " + message);
-		return "-ERR "+message+"\n";
+		System.out.println("S: SENT -ERR " + message);
+		return "-ERR "+message+"\r\n";
 	}
 	
 	public void error(String message) throws IOException

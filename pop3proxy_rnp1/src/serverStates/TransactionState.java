@@ -1,5 +1,6 @@
 package serverStates;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -22,7 +23,7 @@ public class TransactionState extends Pop3ServerState {
 	
 	@Override
 	public void handleState() {
-		System.out.println("S: Switched to AuthorizationState");
+		System.out.println("S("+ Thread.currentThread() +": Switched to AuthorizationState");
 		String inputLine;
 		String word;
 		boolean quit = false;
@@ -71,12 +72,25 @@ public class TransactionState extends Pop3ServerState {
 	
 	private void stat()
 	{
-		
+		try {
+			okay(mbox.quantity() + " messages (" + String.valueOf(mbox.numberOctets()) + " octets)");
+		} catch (IOException e) {
+			ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+		}
 	}
 	
 	private void list(Scanner scan)
 	{
-		
+		stat();
+		BufferedWriter bw = context.getWriter();
+		for (String s: mbox.fileList()){
+			try {
+				bw.write(s);
+				bw.flush();
+			} catch (IOException e) {
+				ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
 	}
 	
 	private void retr(Scanner scan)

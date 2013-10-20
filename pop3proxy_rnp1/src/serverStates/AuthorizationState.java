@@ -42,7 +42,7 @@ public class AuthorizationState extends Pop3ServerState
 					quit = true;
 					break;
 				default:
-					error("illegal command: " + word);
+					error("");
 				}
 				scan.close();
 			}
