@@ -1,6 +1,10 @@
 package serverStates;
 
+import java.io.IOException;
+import java.util.logging.Level;
+
 import main.Pop3ServerContext;
+import main.ProxyServer;
 
 public abstract class Pop3ServerState
 {
@@ -14,11 +18,27 @@ public abstract class Pop3ServerState
 	
 	public String getOK(String message)
 	{
+		//ProxyServer.infoLogger.log(Level.INFO, "S: +OK " + message);
+		System.out.println("S: SENT +OK " + message);
 		return "+OK "+message+"\n";
 	}
 	
 	public String getErr(String message)
 	{
+		//ProxyServer.infoLogger.log(Level.INFO, "S: -ERR " + message);
+		System.out.println("S: SENT +Err " + message);
 		return "-ERR "+message+"\n";
+	}
+	
+	public void error(String message) throws IOException
+	{
+		context.getWriter().write(getErr(message));
+		context.getWriter().flush();
+	}
+	
+	public void okay(String message) throws IOException
+	{
+		context.getWriter().write(getOK(message));
+		context.getWriter().flush();
 	}
 }

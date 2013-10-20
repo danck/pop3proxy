@@ -1,3 +1,6 @@
 /AuthorizationState.class
 /Pop3ServerState.class
 /ServerConnectedState.class
+/TerminationState.class
+/TransactionState.class
+/UpdateState.class
