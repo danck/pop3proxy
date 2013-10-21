@@ -37,10 +37,12 @@ public class AuthorizationState extends Pop3ServerState
 				switch (word = scan.next()) {
 				case ClientCommand.USER:
 					authorize(scan);
-					break;
+					scan.close();
+					return;
 				case ClientCommand.QUIT: 
 					quit = true;
-					break;
+					scan.close();
+					return;
 				default:
 					error("");
 				}

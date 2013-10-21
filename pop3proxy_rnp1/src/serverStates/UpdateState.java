@@ -1,18 +1,29 @@
 package serverStates;
 
+import java.io.IOException;
+import java.util.logging.Level;
+
+import main.Mailbox;
 import main.Pop3ServerContext;
+import main.ProxyServer;
 
 public class UpdateState extends Pop3ServerState {
-
-	public UpdateState(Pop3ServerContext context) {
+	private Mailbox mbox;
+	
+	public UpdateState(Pop3ServerContext context, Mailbox mbox) {
 		super(context);
-		// TODO Auto-generated constructor stub
+		handleState();
 	}
 
 	@Override
 	public void handleState() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("S: Switched to UpdateState");
+		mbox.update();
+		try {
+			okay("");
+		} catch (IOException e) {
+			ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+		}
 	}
 
 }

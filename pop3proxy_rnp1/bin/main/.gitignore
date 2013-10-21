@@ -7,3 +7,5 @@
 /Mail.class
 /ProxyServer.class
 /Account$1.class
+/Client.class
+/Client$RemoteAccount.class

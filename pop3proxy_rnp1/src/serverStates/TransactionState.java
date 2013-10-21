@@ -2,6 +2,7 @@ package serverStates;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 
@@ -55,8 +56,10 @@ public class TransactionState extends Pop3ServerState {
 						rset();
 						break;
 					case ClientCommand.QUIT:
+						context.setState(new UpdateState(context, mbox));
 						quit = true;
-						break;					
+						scan.close();
+						return;
 					default:
 						error("illegal command: " + word);
 				}
@@ -82,34 +85,72 @@ public class TransactionState extends Pop3ServerState {
 	private void list(Scanner scan)
 	{
 		stat();
+		List<String> l = mbox.fileList();
 		BufferedWriter bw = context.getWriter();
-		for (String s: mbox.fileList()){
+		for (String s: l){
 			try {
-				bw.write(s);
+				System.out.println("S: SENT " + s);
+				bw.write(s + "\r\n");
 				bw.flush();
+			} catch (IOException e) {
+				ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+		try {
+			System.out.println("S: SENT .");
+			bw.write(".\r\n");
+			bw.flush();
+		} catch (IOException e) {
+			ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+		}
+	}
+	
+	private void retr(Scanner scan)
+	{
+		try {
+			Integer messageNumber = scan.nextInt();
+			okay(mbox.retrieve(messageNumber));
+			String message = mbox.retrieve(messageNumber);
+			System.out.println("S: SENT " + message);
+			context.getWriter().write(message + "\r\n");
+			System.out.println("S: SENT .");
+			context.getWriter().write(".\r\n");
+			context.getWriter().flush();
+		} catch (IOException e) {
+			ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+		}
+	}
+	
+	private void dele(Scanner scan)
+	{
+		Integer messageNumber = scan.nextInt();
+		if (mbox.delete(messageNumber)) {
+			try {
+				okay("message " + messageNumber + " deleted");
+			} catch (IOException e) {
+				ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			try {
+				error("message " + messageNumber + " already deleted");
 			} catch (IOException e) {
 				ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}
 	
-	private void retr(Scanner scan)
-	{
-		
-	}
-	
-	private void dele(Scanner scan)
-	{
-		
-	}
-	
 	private void noop()
 	{
-		
+		try {
+			okay("");
+		} catch (IOException e) {
+			ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+		}
 	}
 	
 	private void rset()
 	{
-		
+		mbox.reset();
+		stat();
 	}
 }

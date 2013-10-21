@@ -20,6 +20,9 @@ public class ProxyServer {
 	public static void main(String[] args)
 	{	
 		initialize();
+		
+		Thread fetcher = new Thread(new Client());
+		fetcher.start();
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
 		try {
@@ -34,8 +37,7 @@ public class ProxyServer {
 					pool.submit(task);
 				}
 			} catch (IOException e) {
-				
-				e.printStackTrace();
+				errorLogger.log(Level.SEVERE, "Failed to initialize Connection: " + e.getMessage(), e);
 			} catch (RuntimeException e) {
 				errorLogger.log(Level.SEVERE, "Failed to initialize Connection: " + e.getMessage(), e);
 			}
@@ -52,7 +54,8 @@ public class ProxyServer {
 		Account a = Account.getByCredentials("manfred", "Wurst");
 		Mailbox.add(a);
 		Mailbox mbox = Mailbox.get(a);
-		mbox.addMessage(
-				"Hallo Peter");
+		mbox.addMessage("From: George Jones <Jones@Host.Net> \r\n Subject  :  Rhabarbaraba \r\n Sender: Jones@Host\r\nReply-To: The Committee: Jones@Host.Net,\r\nSmith@Other.Org,\r\nDoe@Somewhere-Else;" +
+				"\r\n\0\r\nHallo Peter");
+		mbox.addMessage("Hallo Ugur");
 	}
 }
