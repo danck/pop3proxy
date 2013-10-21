@@ -109,10 +109,10 @@ public class TransactionState extends Pop3ServerState {
 	{
 		try {
 			Integer messageNumber = scan.nextInt();
-			okay(mbox.retrieve(messageNumber));
-			String message = mbox.retrieve(messageNumber);
-			System.out.println("S: SENT " + message);
-			context.getWriter().write(message + "\r\n");
+			okay("\r\n" + mbox.retrieve(messageNumber));
+//			String message = mbox.retrieve(messageNumber);
+//			System.out.println("S: SENT " + message);
+//			context.getWriter().write(message + "\r\n");
 			System.out.println("S: SENT .");
 			context.getWriter().write(".\r\n");
 			context.getWriter().flush();

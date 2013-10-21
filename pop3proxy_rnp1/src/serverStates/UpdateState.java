@@ -12,6 +12,7 @@ public class UpdateState extends Pop3ServerState {
 	
 	public UpdateState(Pop3ServerContext context, Mailbox mbox) {
 		super(context);
+		this.mbox = mbox;
 		handleState();
 	}
 
@@ -19,10 +20,15 @@ public class UpdateState extends Pop3ServerState {
 	public void handleState() {
 		System.out.println("S: Switched to UpdateState");
 		mbox.update();
+		mbox.reset();
 		try {
-			okay("");
+			okay("Tschuess");
+			mbox.unlock();
+			context.getReader().close();
+			context.getWriter().close();
+			context.getSocket().close();
 		} catch (IOException e) {
-			ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
+//			ProxyServer.errorLogger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 

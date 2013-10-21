@@ -85,6 +85,7 @@ public class AuthorizationState extends Pop3ServerState
 	{
 		if (Account.validate(user, pass))
 		{
+			System.out.println(Account.getByCredentials(user, pass).toString());
 			Mailbox mbox = Mailbox.get(Account.getByCredentials(user, pass));
 			System.out.println(mbox);
 			try {

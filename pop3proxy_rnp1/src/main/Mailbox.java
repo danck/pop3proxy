@@ -24,7 +24,7 @@ public class Mailbox extends ReentrantLock
 {
 	
 	private static Map<Account, Mailbox> mailboxes = new HashMap<Account, Mailbox>();
-	private final static String root = "mailboxes" + "\\";
+	private final static String root = "mailboxes" + "/";
 	private String uuid;
 	private Map<Integer,String> fileMap;
 	private Set<Integer> toDelete = new HashSet<Integer>();
@@ -45,7 +45,7 @@ public class Mailbox extends ReentrantLock
 	private Mailbox()
 	{
 		uuid 	= UUID.randomUUID().toString();
-		dir 	= root + uuid + "\\";
+		dir 	= root + uuid + "/";
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class Mailbox extends ReentrantLock
 			FileReader fr = new FileReader(dir + fileMap.get(fileNumber));
 			BufferedReader br = new BufferedReader(fr);
 			while ((line = br.readLine()) != null) {
-				sb.append(line);
+				sb.append(line+ "\r\n");
 			}
 				
 			fr.close();
@@ -131,6 +131,7 @@ public class Mailbox extends ReentrantLock
 	}
 	
 	public void update() {
+		System.out.println("mbox update");
 		for (String s: new File(dir).list()){
 			System.out.println("deleting file "+ dir + s);
 			try {
