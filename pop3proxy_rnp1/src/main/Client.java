@@ -146,6 +146,8 @@ public class Client implements Runnable {
 			log("#### Starting multiline transfer ####");
 			line = reader.readLine();
 			while (!line.equals(".")){
+				if (line.startsWith("."))
+					line = line.substring(1);
 				sb.append(line + "\r\n");
 				log("RECV " + line);
 				line = reader.readLine();

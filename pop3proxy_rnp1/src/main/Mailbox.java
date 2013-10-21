@@ -111,6 +111,8 @@ public class Mailbox extends ReentrantLock
 			FileReader fr = new FileReader(dir + fileMap.get(fileNumber));
 			BufferedReader br = new BufferedReader(fr);
 			while ((line = br.readLine()) != null) {
+				if (line.startsWith("."))
+					line = "." + line;
 				sb.append(line+ "\r\n");
 			}
 				
